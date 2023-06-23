@@ -2,6 +2,7 @@ package utils
 
 import (
 	"encoding/json"
+	"io"
 	"net/http"
 )
 
@@ -12,7 +13,9 @@ func CheckNilError(err error) {
 }
 
 func ParseBody(r *http.Request, x interface{}) {
-	if err := json.NewDecoder(r.Body).Decode(&x); err != nil {
-		return
+	if body, err := io.ReadAll(r.Body); err != nil {
+		if err := json.Unmarshal([]byte(body), x); err != nil {
+			return
+		}
 	}
 }
