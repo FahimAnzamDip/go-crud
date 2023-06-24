@@ -9,7 +9,7 @@ import (
 var db *gorm.DB
 
 func Connect() {
-	d, err := gorm.Open("mysql", "root:@/go_crud?charset=utf8&parseTime=True&loc=Local")
+	d, err := gorm.Open("mysql", "root:@tcp(127.0.0.1:3306)/go_crud?charset=utf8&parseTime=True&loc=Local")
 	utils.CheckNilError(err)
 	db = d
 }

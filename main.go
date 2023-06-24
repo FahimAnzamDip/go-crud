@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 
@@ -10,7 +11,10 @@ import (
 
 func main() {
 	router := mux.NewRouter()
+
 	routes.RegisterBookRoutes(router)
 	http.Handle("/", router)
+
+	fmt.Println("API URL: http://localhost:8000/")
 	log.Fatal(http.ListenAndServe(":8000", router))
 }

@@ -40,7 +40,7 @@ func GetBookByID(w http.ResponseWriter, r *http.Request) {
 
 func StoreBook(w http.ResponseWriter, r *http.Request) {
 	book := &models.Book{}
-	utils.ParseBody(r, book)
+	utils.ParseBody(w, r, &book)
 
 	newBook := book.CreateBook()
 	response, err := json.Marshal(newBook)
@@ -53,7 +53,7 @@ func StoreBook(w http.ResponseWriter, r *http.Request) {
 
 func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	updatedBook := &models.Book{}
-	utils.ParseBody(r, updatedBook)
+	utils.ParseBody(w, r, &updatedBook)
 
 	params := mux.Vars(r)
 	id := params["id"]
@@ -79,7 +79,7 @@ func UpdateBook(w http.ResponseWriter, r *http.Request) {
 	utils.CheckNilError(err)
 
 	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusCreated)
+	w.WriteHeader(http.StatusOK)
 	w.Write(response)
 }
 
@@ -90,8 +90,12 @@ func DeleteBook(w http.ResponseWriter, r *http.Request) {
 	ID, err := strconv.ParseInt(id, 10, 64)
 	utils.CheckNilError(err)
 
-	book := models.DeleteBook(ID)
-	response, err := json.Marshal(book)
+	models.DeleteBook(ID)
+	message := map[string]interface{}{
+		"message": "The book has been deleted.",
+		"status":  true,
+	}
+	response, err := json.Marshal(message)
 	utils.CheckNilError(err)
 
 	w.Header().Set("Content-Type", "application/json")
